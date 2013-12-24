@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1378569730 source:d:\我的文档\c++workspace\trietest\main.cpp
+	<iostream>
+	"Trie.h"
+
+1378570383 d:\我的文档\c++workspace\trietest\trie.h
+	<iostream>
+
+1378570455 source:d:\我的文档\c++workspace\trietest\trie.cpp
+	"Trie.h"
+
+1387861831 source:e:\dj\c++project\trietest\trie.cpp
+	"Trie.h"
+
+1387860724 e:\dj\c++project\trietest\trie.h
+	<iostream>
+
+1387861295 source:e:\dj\c++project\trietest\main.cpp
+	"Trie.h"
+
