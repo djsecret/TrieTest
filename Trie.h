@@ -33,10 +33,10 @@ struct Trie_Node
             branch[i] = NULL;
         }
     }
-    ~Trie_Node()
-    {
-        cout << "~Trie_Node()" << endl;
-    }
+//    ~Trie_Node()
+//    {
+//        cout << "~Trie_Node()" << endl;
+//    }
 
 };
 
@@ -47,7 +47,7 @@ public:
     {
         root = new Trie_Node();
     }
-    ~Trie(){}
+//    ~Trie(){}
 
     bool Insert(const char* word);
     bool Search(const char* word);

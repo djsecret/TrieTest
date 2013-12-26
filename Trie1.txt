@@ -78,13 +78,15 @@ bool Trie::Search(const char* word)
  *
  */
 
-bool Trie::Delete(char* word)
+bool Trie::Delete(const char* word)
 {
     Trie_Node *node = root;
-
-    Trie_Node *deleteNode = root;//记录删除结点，可能是最后一个分叉，也可能是最后一个分叉后最后一个isword为true的结点
-    char* deleteInWord = word;//记录删除点在word中的位置，这样，该点后面的字符都会从trie中删除
-
+    Trie_Node *one_Node = NULL;//指向路径中最后一个分叉
+    Trie_Node *word_Node = NULL;//指向路径中最后一个分叉后最后一个isword为true的结点
+    int word_Location = 0;
+    Trie_Node *follow = node;
+    //int loc = 0;//记录上一个
+    int one_Location = 0;//记录最近一个只有一个分支的结点在父亲指针数组的索引，为了删除
 
     while(*word)
     {
@@ -94,15 +96,16 @@ bool Trie::Delete(char* word)
         {
             if(node->n_Branch >=2 && node->branch[location]->n_Branch <= 1)//查找最后一个分叉
             {
-                deleteNode = node;
-                deleteInWord = word;
+                one_Node = node;
+                one_Location = location;
+                word_Node = NULL;//之前的单词结尾结点都作废
             }
 
             if(node->isWord == true)//路径中的标记为单词结尾的结点，如果这个结点在最后一个分叉之后，那么删除时，
                                     //只需要删除该结点的后续结点即可
             {
-                deleteNode = node;
-                deleteInWord = word;
+                word_Node = node;
+                word_Location = location;
             }
             node = node->branch[location];
             word++;
@@ -122,28 +125,17 @@ bool Trie::Delete(char* word)
         }
         else
         {
-            /**< 保留待删除子字符串的开始结点，即最后一个分叉或者最后一个分叉后面最后一个单词结尾结点
-            的下一个结点 ，从该结点开始（包括该结点），都将被删除*/
-            int deleteLocation = *deleteInWord - 'a';
-            Trie_Node *nextNode = deleteNode->branch[deleteLocation];
-            /**< 被删除子字符串的父节点所做的操作 */
-            deleteNode->branch[deleteLocation] = NULL;
-            deleteNode->n_Branch--;
-
-            while(*deleteInWord)//删除剩余结点
+            if(word_Node != NULL)//说明在最后一个分叉后面，有单词结尾的结点，因此需要删除该结点的后续
             {
-                deleteNode = nextNode;
-
-
-                deleteInWord++;
-                if(*deleteInWord != '\0')//如果没有走到字符的最后一个
-                {
-                    deleteLocation = *deleteInWord - 'a';
-                    nextNode = deleteNode->branch[deleteLocation];
-                }
-
-                delete deleteNode;
-
+                word_Node->branch[word_Location] = NULL;
+                word_Node->n_Branch--;
+                delete word_Node->branch[word_Location];
+            }
+            else//说明在最后一个分叉后面，没有单词结尾的结点，因此需要最后一个分叉后面的后续
+            {
+                one_Node->branch[one_Location] = NULL;
+                one_Node->n_Branch--;
+                delete one_Node->branch[one_Location];
             }
 
             //或者可以倒序删除，不过需要在结点中记录指向父节点的指针
